@@ -1,0 +1,55 @@
+--Horizontal View
+CREATE VIEW CustomerBasicInfo AS
+SELECT CustomerID, FirstName, LastName, Email
+FROM Customers;
+
+
+--Vertical View
+CREATE VIEW TopCustomers AS
+SELECT CustomerID, FirstName, LastName
+FROM Customers
+WHERE CustomerID <= 5;
+
+
+--Mixed View
+CREATE VIEW ProductLimitedInfo AS
+SELECT ProductID, ProductName, Price
+FROM Products
+WHERE StockQuantity > 100;
+
+
+--View with Joining
+CREATE VIEW OrderDetailsView AS
+SELECT Orders.OrderID, Customers.FirstName, Customers.LastName, Products.ProductName, OrderDetails.Quantity, OrderDetails.LineTotal
+FROM Orders
+JOIN Customers ON Orders.CustomerID = Customers.CustomerID
+JOIN OrderDetails ON Orders.OrderID = OrderDetails.OrderID
+JOIN Products ON OrderDetails.ProductID = Products.ProductID;
+
+
+--View with Subquery
+CREATE VIEW HighValueOrders AS
+SELECT OrderID, CustomerID, TotalAmount
+FROM Orders
+WHERE TotalAmount > (SELECT AVG(TotalAmount) FROM Orders);
+
+
+--View with Union
+CREATE VIEW AllProductsInfo AS
+SELECT ProductID, ProductName, Price FROM Products
+UNION
+SELECT ProductID, 'Out of Stock' AS ProductName, 0 AS Price FROM Products WHERE StockQuantity = 0;
+
+
+-- View on the Select from Another View
+CREATE VIEW ActiveHighValueOrders AS
+SELECT * FROM HighValueOrders
+WHERE TotalAmount > 1000;
+
+
+--View with Check Option
+CREATE VIEW CustomersWithGmail AS
+SELECT CustomerID, FirstName, LastName, Email
+FROM Customers
+WHERE Email LIKE '%@gmail.com'
+WITH CHECK OPTION;
