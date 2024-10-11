@@ -1,1 +1,114 @@
+CREATE TABLE Customers (
+    CustomerID INT PRIMARY KEY,
+    FirstName VARCHAR(50),
+    LastName VARCHAR(50),
+    Email VARCHAR(100),
+    PhoneNumber VARCHAR(15),
+    Address VARCHAR(150)
+);
+
+INSERT INTO Customers (CustomerID, FirstName, LastName, Email, PhoneNumber, Address)
+VALUES
+(1, 'John', 'Doe', 'john.doe@example.com', '123-456-7890', '123 Main St'),
+(2, 'Jane', 'Smith', 'jane.smith@example.com', '234-567-8901', '456 Oak Ave'),
+(3, 'Alice', 'Johnson', 'alice.johnson@example.com', '345-678-9012', '789 Maple Dr'),
+(4, 'Bob', 'Williams', 'bob.williams@example.com', '456-789-0123', '321 Pine Ln'),
+(5, 'Charlie', 'Brown', 'charlie.brown@example.com', '567-890-1234', '654 Cedar St'),
+(6, 'David', 'Clark', 'david.clark@example.com', '678-901-2345', '987 Elm St'),
+(7, 'Eve', 'Adams', 'eve.adams@example.com', '789-012-3456', '111 Birch Rd'),
+(8, 'Frank', 'Davis', 'frank.davis@example.com', '890-123-4567', '222 Spruce Blvd'),
+(9, 'Grace', 'Lee', 'grace.lee@example.com', '901-234-5678', '333 Sycamore Ct'),
+(10, 'Hannah', 'Miller', 'hannah.miller@example.com', '012-345-6789', '444 Redwood Pl');
+
+UPDATE Customers
+SET Email = 'john.doe@newdomain.com'
+WHERE CustomerID = 1;
+
+DELETE FROM Customers
+WHERE CustomerID = 10;
+
+CREATE TABLE Products (
+    ProductID INT PRIMARY KEY,
+    ProductName VARCHAR(100),
+    Price DECIMAL(10, 2),
+    StockQuantity INT
+);
+
+INSERT INTO Products (ProductID, ProductName, Price, StockQuantity)
+VALUES
+(1, 'Laptop', 899.99, 50),
+(2, 'Smartphone', 499.99, 150),
+(3, 'Tablet', 299.99, 100),
+(4, 'Monitor', 199.99, 75),
+(5, 'Keyboard', 49.99, 200),
+(6, 'Mouse', 29.99, 250),
+(7, 'Headphones', 89.99, 100),
+(8, 'Smartwatch', 199.99, 80),
+(9, 'Printer', 149.99, 50),
+(10, 'Webcam', 79.99, 120);
+
+UPDATE Products
+SET StockQuantity = 60
+WHERE ProductID = 1;
+
+DELETE FROM Products
+WHERE ProductID = 10;
+
+CREATE TABLE Orders (
+    OrderID INT PRIMARY KEY,
+    CustomerID INT,
+    OrderDate DATE,
+    TotalAmount DECIMAL(10, 2),
+    FOREIGN KEY (CustomerID) REFERENCES Customers(CustomerID)
+);
+
+INSERT INTO Orders (OrderID, CustomerID, OrderDate, TotalAmount)
+VALUES
+(1, 1, '2024-10-01', 1049.98),
+(2, 2, '2024-10-02', 699.98),
+(3, 3, '2024-10-03', 349.98),
+(4, 4, '2024-10-04', 1199.98),
+(5, 5, '2024-10-05', 549.98),
+(6, 6, '2024-10-06', 99.98),
+(7, 7, '2024-10-07', 379.98),
+(8, 8, '2024-10-08', 239.98),
+(9, 9, '2024-10-09', 149.98),
+(10, 10, '2024-10-10', 829.98);
+
+UPDATE Orders
+SET TotalAmount = 1050.00
+WHERE OrderID = 1;
+
+DELETE FROM Orders
+WHERE OrderID = 10;
+
+CREATE TABLE OrderDetails (
+    OrderDetailID INT PRIMARY KEY,
+    OrderID INT,
+    ProductID INT,
+    Quantity INT,
+    LineTotal DECIMAL(10, 2),
+    FOREIGN KEY (OrderID) REFERENCES Orders(OrderID),
+    FOREIGN KEY (ProductID) REFERENCES Products(ProductID)
+);
+
+INSERT INTO OrderDetails (OrderDetailID, OrderID, ProductID, Quantity, LineTotal)
+VALUES
+(1, 1, 1, 1, 899.99),
+(2, 1, 5, 3, 149.97),
+(3, 2, 2, 1, 499.99),
+(4, 2, 6, 5, 149.95),
+(5, 3, 3, 1, 299.99),
+(6, 3, 7, 1, 49.99),
+(7, 4, 1, 1, 899.99),
+(8, 4, 4, 2, 399.98),
+(9, 5, 2, 1, 499.99),
+(10, 5, 8, 1, 199.99);
+
+UPDATE OrderDetails
+SET Quantity = 2
+WHERE OrderDetailID = 3;
+
+DELETE FROM OrderDetails
+WHERE OrderDetailID = 10;
 
