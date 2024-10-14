@@ -1,0 +1,21 @@
+CREATE TABLE roles (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    name VARCHAR(50) NOT NULL UNIQUE
+);
+
+CREATE TABLE users (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    username VARCHAR(50) NOT NULL UNIQUE,
+    role_id INT,
+    FOREIGN KEY (role_id) REFERENCES roles(id)
+);
+
+INSERT INTO roles (name)
+VALUES 
+    ('admin'), 
+    ('user');
+
+INSERT INTO users (username, role_id)
+VALUES 
+    ('john_doe', (SELECT id FROM roles WHERE name = 'admin')),
+    ('jane_smith', (SELECT id FROM roles WHERE name = 'user'));

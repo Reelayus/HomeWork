@@ -111,4 +111,3 @@ WHERE OrderDetailID = 3;
 
 DELETE FROM OrderDetails
 WHERE OrderDetailID = 10;
-
