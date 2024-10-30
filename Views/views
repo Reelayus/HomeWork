@@ -1,4 +1,4 @@
---Horizontal View
+--Horizontal View   
 CREATE VIEW CustomerBasicInfo AS
 SELECT CustomerID, FirstName, LastName, Email
 FROM Customers;
