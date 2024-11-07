@@ -1,0 +1,105 @@
+--Functions
+CREATE FUNCTION calculate_order_total(orderId INT) RETURNS REAL
+AS $$
+DECLARE
+    total REAL;
+BEGIN
+    SELECT SUM((unit_price * quantity) * (1 - discount)) INTO total
+    FROM order_details
+    WHERE order_id = orderId;
+    
+    RETURN total;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE FUNCTION count_customer_orders(customerId VARCHAR) RETURNS INT
+AS $$
+DECLARE
+    totalOrders INT;
+BEGIN
+    SELECT COUNT(*) INTO totalOrders
+    FROM orders
+    WHERE customer_id = customerId;
+    
+    RETURN totalOrders;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE FUNCTION average_discount() RETURNS REAL
+AS $$
+DECLARE
+    avgDiscount REAL;
+BEGIN
+    SELECT AVG(discount) INTO avgDiscount
+    FROM order_details;
+    
+    RETURN avgDiscount;
+END;
+$$ LANGUAGE plpgsql;
+
+
+--stored procedures with SELECT+INSERT statement
+CREATE PROCEDURE get_customer_orders(customerId VARCHAR)
+LANGUAGE plpgsql
+AS $$
+BEGIN
+    SELECT * FROM orders WHERE customer_id = customerId;
+END;
+$$;
+
+CREATE PROCEDURE insert_order(
+    customerId VARCHAR,
+    employeeId INT,
+    orderDate DATE,
+    requiredDate DATE,
+    shipName VARCHAR,
+    shipAddress VARCHAR,
+    shipCity VARCHAR,
+    shipRegion VARCHAR,
+    shipPostalCode VARCHAR,
+    shipCountry VARCHAR
+)
+LANGUAGE plpgsql
+AS $$
+BEGIN
+    INSERT INTO orders (customer_id, employee_id, order_date, required_date, ship_name, ship_address, ship_city, ship_region, ship_postal_code, ship_country)
+    VALUES (customerId, employeeId, orderDate, requiredDate, shipName, shipAddress, shipCity, shipRegion, shipPostalCode, shipCountry);
+END;
+$$;
+
+
+--stored procedures with UPDATE statement
+CREATE PROCEDURE update_order_shipping_address(
+    orderId INT,
+    newShipAddress VARCHAR,
+    newShipCity VARCHAR,
+    newShipRegion VARCHAR,
+    newShipPostalCode VARCHAR,
+    newShipCountry VARCHAR
+)
+LANGUAGE plpgsql
+AS $$
+BEGIN
+    UPDATE orders
+    SET ship_address = newShipAddress,
+        ship_city = newShipCity,
+        ship_region = newShipRegion,
+        ship_postal_code = newShipPostalCode,
+        ship_country = newShipCountry
+    WHERE order_id = orderId;
+END;
+$$;
+
+CREATE PROCEDURE update_order_discount(
+    orderId INT,
+    productId INT,
+    newDiscount REAL
+)
+LANGUAGE plpgsql
+AS $$
+BEGIN
+    UPDATE order_details
+    SET discount = newDiscount
+    WHERE order_id = orderId AND product_id = productId;
+END;
+$$;
